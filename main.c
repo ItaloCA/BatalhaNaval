@@ -18,10 +18,11 @@ int main(int argc, char const *argv[]){
 //Iniciar
 	criar_tabuleiro(&COM);
 	criar_tabuleiro(&HUM);
-	poisicionando_barcos(HUM, barcos_HUM);
-	poisicionando_barcos(COM, barcos_COM);
+	poisicionando_barcos(HUM, &barcos_HUM);
+	poisicionando_barcos(COM, &barcos_COM);
 
 //teste
+	printf("teste");
 	imprimir(HUM, COM);
 	atacar(COM, 5, 5, barcos_COM, barcos_HUM, &vidasHUM, &vidasCOM);
 //Jogo
