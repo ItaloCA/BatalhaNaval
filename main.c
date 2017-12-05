@@ -29,13 +29,14 @@ int main(int argc, char const *argv[]){
 		imprimir(HUM, COM);
 		rodada++;
 		if(rodada > 1)
-			printf("Ultimos Ataques:\n   Jogador: (%d, %d)\n   Bot:     (%d, %d)\n" , ult_ataque_x, ult_ataque_y, ult_alvo_x, ult_alvo_y);		
+			printf("Ultimos Ataques:\n   Jogador: (%d, %c)\n   Bot:     (%d, %c)\n" , ult_ataque_x, (char)ult_ataque_y, ult_alvo_x, (char)ult_alvo_y);		
 		
 		printf("Digite as coordenadas (x,y) para o ataque: ");
 
 		scanf("%s", ataque);
-		traduzir("a , 4/0 \0", &ataque_x, &ataque_y);
-		printf("%d %d x e y" , ataque_x, ataque_y);
+
+		int teste = traduzir("c , 4 \0", &ataque_x, &ataque_y);
+		printf("%d %d x e y\n" , ataque_x, ataque_y);
 /*	//nao implementado
 		while(traduzir(ataque, &ataque_x, &ataque_y)){
 			printf("Entrada invalida!\n");
@@ -45,7 +46,10 @@ int main(int argc, char const *argv[]){
 	
 		atacar(COM, ataque_x, ataque_y, barcos_COM, barcos_HUM, &vidasHUM, &vidasCOM);
 
-
+		ult_ataque_x = ataque_x + 1;
+		ult_ataque_y = ataque_y + 65;
+		ult_alvo_x = 1;
+		ult_alvo_y = 1 + 65;
 /*	//Vez do Computador
 
 //*/
