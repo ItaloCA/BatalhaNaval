@@ -11,7 +11,8 @@ int main(int argc, char const *argv[]){
 	BARCO barcos_COM[9];
 	int vidasHUM = 8;
 	int vidasCOM = 8;
-	int mira_x, mira_y, ult_alvo_x, ult_alvo_y, ult_ataque_x, ult_ataque_y;
+	int mira_x, mira_y, ult_alvo_x, ult_alvo_y, ult_ataque_x, ult_ataque_y, ataque_x, ataque_y;
+	char ataque[21];
 	int rodada = 0;
 	srand(time(NULL));
 //Iniciar
@@ -31,7 +32,22 @@ int main(int argc, char const *argv[]){
 		if(rodada > 1)
 			printf("Ultimos Ataques:\n   Jogador: (%d, %d)\n   Bot:     (%d, %d)\n" , ult_ataque_x, ult_ataque_y, ult_alvo_x, ult_alvo_y);		
 		
+		printf("Digite as coordenadas (x,y) para o ataque: ");
 
+		scanf("%s", ataque);
+/*	//nao implementado
+		while(traduzir(ataque, &ataque_x, &ataque_y)){
+			printf("Entrada invalida!\n");
+			scanf("%s", ataque);   
+		}
+//*/
+	
+		atacar(COM, ataque_x, ataque_y, barcos_COM, barcos_HUM, &vidasHUM, &vidasCOM);
+
+
+/*	//Vez do Computador
+
+//*/
 		vidasHUM -= 4; //teste
 	}
 

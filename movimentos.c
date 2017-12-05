@@ -109,7 +109,7 @@ int atacar(TAB *t, int x, int y, BARCO *b, BARCO *frota, int* vidas, int* hp_ini
 			t->descoberto = 1;
 			(b[(t->tipo) - 1]).pecasRest -= 1;
 
-			if(t->tipo == 10){   //pode ser 1 tambem, sujeito a  mudanca
+			if(t->tipo == 10){   //Caso JANGADA. Pode ser 1 tambem, sujeito a  mudanca
 				if((frota[1]).pecasRest){
 					(frota[1]).pecasRest = 0;
 					((frota[1]).proa)->descoberto = 1;
@@ -119,13 +119,13 @@ int atacar(TAB *t, int x, int y, BARCO *b, BARCO *frota, int* vidas, int* hp_ini
 					((frota[2]).proa)->descoberto = 1;
 				}
 				*vidas--;
-			}else
+			}else                //Caso SUBMARINO
 				*hp_inimigo--;
 
 			return 0;
 		}
 
-
+		//OUTROS CASOS
 		b[t->tipo - 1].pecasRest -= 1;
 		if(t->celula != '#')
 			t->descoberto = 1;
@@ -136,7 +136,7 @@ int atacar(TAB *t, int x, int y, BARCO *b, BARCO *frota, int* vidas, int* hp_ini
 			revelar_barco(b[t->tipo + 1], t->tipo);
 			*hp_inimigo--;
 
-
+		return 0;
 
 
 	}
