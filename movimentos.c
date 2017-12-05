@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 #include "tabuleiroBN.h"
 
 
@@ -145,19 +146,38 @@ int atacar(TAB *t, int x, int y, BARCO *b, BARCO *frota, int* vidas, int* hp_ini
 	return 1;
 }
 
-int traduzir(char * ataque[5], int * ataquex ,int * ataquey){
-	char aux;
-	int  i = 0, aux;
-	for(i=0; ataque[i]!='/0';i++)
+int traduzir(char ataque[21], int * ataquex ,int * ataquey){
+	printf("_I_\n");
+	int aux_char;
+	int  i = 0, aux_int,cont;
+	aux_int = -1;
+	aux_char = -1;
+	/*for(i=0; ataque[i]!='/0';i++){
 		ataque[i] = toupper(ataque[i]);
-	while(ataque[i]!= '/0'){
-		if(ataque[i]=='A' || ataque[i]=='B' || ataque[i]=='C' || ataque[i]=='D' || ataque[i]=='E' ||ataque[i]=='L' || ataque[i]=='G' || ataque[i]=='H' || ataque[i]=='I' || ataque[i]=='J' || ataque[i]=='K' || ataque[i]=='L' )
-			aux = ataque[i];
-		else if(ataque[i] =='1' ||ataque[i] =='2' ||ataque[i] =='3' ||ataque[i] =='4' ||ataque[i] =='5' ||ataque[i] =='6' ||ataque[i] =='7' ||ataque[i] =='8' || ataque[i] =='9' ){
-			
+		printf("f\n");
+	}*/i = 0;
+	cont = 0;
+	printf("_I_\n");
+	while(ataque[i] != '/0'){
+		if(/*ataque[i] >= 'A' && ataque[i] <= 'L'*/ ataque[i] == 'A' || ataque[i] == 'B' || ataque[i] == 'C' || ataque[i] == 'D' || ataque[i] == 'E' || ataque[i] == 'F' || ataque[i] == 'G' || ataque[i]=='H' || ataque[i]=='I' || ataque[i]=='J' || ataque[i]=='K' || ataque[i]=='L' )
+			aux_char = ((int)ataque[i]) - 65;
+		else if(/*ataque[i] >= '1' && ataque[i] <= '9'*/  ataque[i] =='1' ||ataque[i] =='2' ||ataque[i] =='3' ||ataque[i] =='4' ||ataque[i] =='5' ||ataque[i] =='6' ||ataque[i] =='7' ||ataque[i] =='8' || ataque[i] =='9' ){
+			cont++;
+			printf("w\n");
+			if(cont > 1)
+				aux_int = (aux_int*10) + (int)ataque[i];
+			else
+				aux_int = ((int)ataque[i]);
 		}
+		i++;
 	}
-
-
-
+	printf("_I_\n");
+	aux_int--;
+	if(aux_int > -1){
+		printf("_I_\n");
+		*ataquex = aux_int;
+		*ataquey = aux_char;
+		return 0; 
+	}else
+		return 1;
 }

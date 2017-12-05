@@ -24,7 +24,6 @@ int main(int argc, char const *argv[]){
 //teste
 	imprimir(HUM, COM);
 	atacar(COM, 5, 5, barcos_COM, barcos_HUM, &vidasHUM, &vidasCOM);
-	
 //Jogo
 	while(vidasHUM && vidasCOM){
 		imprimir(HUM, COM);
@@ -35,6 +34,8 @@ int main(int argc, char const *argv[]){
 		printf("Digite as coordenadas (x,y) para o ataque: ");
 
 		scanf("%s", ataque);
+		traduzir("a , 4/0 \0", &ataque_x, &ataque_y);
+		printf("%d %d x e y" , ataque_x, ataque_y);
 /*	//nao implementado
 		while(traduzir(ataque, &ataque_x, &ataque_y)){
 			printf("Entrada invalida!\n");
