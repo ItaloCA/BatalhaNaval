@@ -145,5 +145,19 @@ int atacar(TAB *t, int x, int y, BARCO *b, BARCO *frota, int* vidas, int* hp_ini
 	return 1;
 }
 
+int traduzir(char * ataque[5], int * ataquex ,int * ataquey){
+	char aux;
+	int  i = 0, aux;
+	for(i=0; ataque[i]!='/0';i++)
+		ataque[i] = toupper(ataque[i]);
+	while(ataque[i]!= '/0'){
+		if(ataque[i]=='A' || ataque[i]=='B' || ataque[i]=='C' || ataque[i]=='D' || ataque[i]=='E' ||ataque[i]=='L' || ataque[i]=='G' || ataque[i]=='H' || ataque[i]=='I' || ataque[i]=='J' || ataque[i]=='K' || ataque[i]=='L' )
+			aux = ataque[i];
+		else if(ataque[i] =='1' ||ataque[i] =='2' ||ataque[i] =='3' ||ataque[i] =='4' ||ataque[i] =='5' ||ataque[i] =='6' ||ataque[i] =='7' ||ataque[i] =='8' || ataque[i] =='9' ){
+			
+		}
+	}
 
 
+
+}
