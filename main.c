@@ -47,6 +47,8 @@ int main(int argc, char const *argv[]){
 	
 		atacar(COM, ataque_x, ataque_y, barcos_COM, barcos_HUM, &vidasHUM, &vidasCOM);
 
+		atacarComp(COM, barcos_HUM, barcos_COM, &vidasCOM, &vidasHUM);
+
 		ult_ataque_x = ataque_x + 1;
 		ult_ataque_y = ataque_y + 65;
 		ult_alvo_x = 1;

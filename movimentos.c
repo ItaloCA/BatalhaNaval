@@ -110,7 +110,7 @@ int atacar(TAB *t, int x, int y, BARCO *b, BARCO *frota, int* vidas, int* hp_ini
 			t->descoberto = 1;
 			(b[(t->tipo) - 1]).pecasRest -= 1;
 
-			if(t->tipo == 10){   //Caso JANGADA. Pode ser 1 tambem, sujeito a  mudanca
+			if(t->tipo == 1){   //Caso JANGADA. Pode ser 1 tambem, sujeito a  mudanca
 				if((frota[1]).pecasRest){
 					(frota[1]).pecasRest = 0;
 					((frota[1]).proa)->descoberto = 1;
@@ -144,6 +144,10 @@ int atacar(TAB *t, int x, int y, BARCO *b, BARCO *frota, int* vidas, int* hp_ini
 
 
 	return 1;
+}
+
+int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas){
+
 }
 
 int traduzir(char ataque[21], int * ataquex ,int * ataquey){
