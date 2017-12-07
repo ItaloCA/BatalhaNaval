@@ -20,6 +20,9 @@ Valores para tipo
 	 8 : Destroyer 2
 	 9 : Porta aviões
 	 10: Jangada
+
+	teste
+
 */
 typedef struct tabuleiro{
 	struct tabuleiro *cima;
