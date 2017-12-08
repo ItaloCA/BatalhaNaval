@@ -11,7 +11,7 @@ int main(int argc, char const *argv[]){
 	BARCO barcos_COM[9];
 	int vidasHUM = 8;
 	int vidasCOM = 8;
-	int mira_x, mira_y, ult_alvo_x, ult_alvo_y, ult_ataque_x, ult_ataque_y, ataque_x, ataque_y;
+	int x, y, ult_alvo_x, ult_alvo_y, ult_ataque_x, ult_ataque_y, ataque_x, ataque_y;
 	char ataque[21];
 	int rodada = 0;
 	srand(time(NULL));
