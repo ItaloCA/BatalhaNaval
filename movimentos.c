@@ -147,7 +147,86 @@ int atacar(TAB *t, int x, int y, BARCO *b, BARCO *frota, int* vidas, int* hp_ini
 }
 
 int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas){
+	
+	//Parametros
+	TAB *tabu = t;
+	BARCO *meus_barc = frota;
+	BARCO *inim_barc = b;
+	int *vid_hi = hp_inimigo;
+	int *vid_mi = vidas;
 
+
+	if(busca == 0){
+		//Jogada rand utilizando a funcao atacar
+		x = rand()%12;
+		y = rand()%12;
+		//ponteiro para x
+		//ponteiro para y
+
+		atacar(tabu, x, y, inim_barc, meus_barc, vid_mi, vid_hi);
+		
+		for (i = 0; i < y; i++){
+			t = t->dir;
+		}
+		for (i = 0; i < x; i++){
+			t = t->baixo;
+		}
+
+		if(t->celula != 'O'){
+			if(b[t->tipo - 1].pecasRest != 0){
+				busca = 1;				//ALTERAR OS PONTEIROS AQUI
+				barco = t->tipo - 1;	//E AQUI
+			}
+		}	
+		return 0;
+	}else{ //                      vvvvvvv BUSCA vvvvvvv
+		
+		//Indo para a posicao da jogada anterior
+		for (i = 0; i < y; i++){
+			t = t->dir;
+		}
+		for (i = 0; i < x; i++){
+			t = t->baixo;
+		}
+
+		//SISTEMA DE BUSCA
+
+		if(t->celula == "#"){
+			if(passo == 0){
+			//PASSO ZERO
+				if(t->cima != NULL){
+					atacar(tabu, x-1, y, inim_barc, meus_barc, vid_mi, vid_hi);
+					x--;
+					if(t->celula == "#" && t->tipo - 1 == barco){
+						return 0;
+					}else{
+						passo++;
+						return 0;
+					}
+
+				}else{
+					atacar(tabu, x, y+1, inim_barc, meus_barc, vid_mi, vid_hi);
+					x--;
+					passo++;
+					return 0;
+				}	
+			}else if(passo == 1){
+
+			}
+		}else if(t->celula == "^"){
+			//SE ACHAR UMA PROA CIMA
+			if(b[t->tipo - 1].direcao == "c"){
+				//PROA PRA CIMA
+			}
+		}else if(t->celula == "v"){
+				//SE ACHAR UMA PROA BAIXO
+		}else if(t->celula == "<"){
+				//SE ACHAR UMA PROA ESQUERDA
+		}else if(t->celula == ">"){
+				//SE ACHAR UMA PROA DIREITA
+		}
+
+	}
 }
 
 int traduzir(char ataque[21], int * ataquex ,int * ataquey){

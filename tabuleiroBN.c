@@ -11,6 +11,7 @@ Valores para descoberto:
 
 Valores para tipo
 	 0 : Agua
+	 1 : Jangada
 	 2 : Submarino 1
 	 3 : Submarino 2
 	 4 : Fragata 1
@@ -19,9 +20,6 @@ Valores para tipo
 	 7 : Destroyer 1
 	 8 : Destroyer 2
 	 9 : Porta aviões
-	 10: Jangada
-
-	teste
 
 */
 typedef struct tabuleiro{

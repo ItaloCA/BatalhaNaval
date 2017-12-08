@@ -26,6 +26,14 @@ int main(int argc, char const *argv[]){
 	imprimir(HUM, COM);
 	atacar(COM, 5, 5, barcos_COM, barcos_HUM, &vidasHUM, &vidasCOM);
 //Jogo
+
+	int *x;
+	int *y;
+	int *busca;
+	int *barco;
+	int *passo;
+	
+
 	while(vidasHUM && vidasCOM){
 		imprimir(HUM, COM);
 		rodada++;
@@ -47,7 +55,7 @@ int main(int argc, char const *argv[]){
 	
 		atacar(COM, ataque_x, ataque_y, barcos_COM, barcos_HUM, &vidasHUM, &vidasCOM);
 
-		atacarComp(COM, barcos_HUM, barcos_COM, &vidasCOM, &vidasHUM);
+		atacarComp(COM, barcos_COM, barcos_HUM, &vidasHUM, &vidasCOM, &busca, &barco);
 
 		ult_ataque_x = ataque_x + 1;
 		ult_ataque_y = ataque_y + 65;
