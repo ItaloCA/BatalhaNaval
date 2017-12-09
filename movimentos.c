@@ -145,7 +145,7 @@ int atacar(TAB *t, int x, int y, BARCO *b, BARCO *frota, int* vidas, int* hp_ini
 
 	return 1;
 }
-
+/*
 int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas){
 	
 	//Parametros
@@ -228,35 +228,43 @@ int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas){
 
 	}
 }
-
-int traduzir(char ataque[21], int * ataquex ,int * ataquey){
+//*/
+int traduzir(char ataque_o[21], int * ataquex ,int * ataquey){
 	printf("_I_\n");
 	int aux_char;
 	int  i = 0, aux_int,cont;
+	char ataque[21];
+	strcpy(ataque, ataque_o);
 	aux_int = -1;
 	aux_char = -1;
-	/*for(i=0; ataque[i]!='/0';i++){
-		ataque[i] = toupper(ataque[i]);
-		printf("f\n");
-	}*/i = 0;
+	
+	for (i = 0; i < 21; i++){
+		if(ataque[i] >= 'a' && ataque[i]<= 'l')
+			ataque[i] = ataque_o[i] - 32;
+	}
+
+	printf("%s\n%s\n", ataque_o, ataque);
+
+	i = 0;
 	cont = 0;
 	printf("_I_\n");
-	while(ataque[i] != '/0'){
-		if(/*ataque[i] >= 'A' && ataque[i] <= 'L'*/ ataque[i] == 'A' || ataque[i] == 'B' || ataque[i] == 'C' || ataque[i] == 'D' || ataque[i] == 'E' || ataque[i] == 'F' || ataque[i] == 'G' || ataque[i]=='H' || ataque[i]=='I' || ataque[i]=='J' || ataque[i]=='K' || ataque[i]=='L' )
+	while(ataque[i] != '\0'){
+		printf("AQUI\n");
+		if(ataque[i] >= 'A' && ataque[i] <= 'L')
 			aux_char = ((int)ataque[i]) - 65;
-		else if(/*ataque[i] >= '1' && ataque[i] <= '9'*/  ataque[i] =='1' ||ataque[i] =='2' ||ataque[i] =='3' ||ataque[i] =='4' ||ataque[i] =='5' ||ataque[i] =='6' ||ataque[i] =='7' ||ataque[i] =='8' || ataque[i] =='9' ){
+		else if(ataque[i] >= '1' && ataque[i] <= '9' ){
 			cont++;
 			printf("w\n");
-			if(cont > 1)
-				aux_int = (aux_int*10) + (int)ataque[i];
+			if(cont > 1 && aux_int == 1)
+				aux_int = (aux_int*10) + ((int)ataque[i] - 48);
 			else
-				aux_int = ((int)ataque[i]);
+				aux_int = ((int)ataque[i]) - 48;
 		}
 		i++;
 	}
-	printf("_I_\n");
 	aux_int--;
-	if(aux_int > -1){
+	printf("%d %d  x y\n" , aux_int, aux_char);
+	if(aux_int > -1 && aux_char > -1){
 		printf("_I_\n");
 		*ataquex = aux_int;
 		*ataquey = aux_char;

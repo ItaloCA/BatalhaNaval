@@ -18,8 +18,8 @@ int main(int argc, char const *argv[]){
 //Iniciar
 	criar_tabuleiro(&COM);
 	criar_tabuleiro(&HUM);
-	poisicionando_barcos(HUM, &barcos_HUM);
-	poisicionando_barcos(COM, &barcos_COM);
+	poisicionando_barcos(HUM, barcos_HUM, 1);
+	poisicionando_barcos(COM, barcos_COM, 0);
 
 //teste
 	printf("teste");
@@ -27,8 +27,8 @@ int main(int argc, char const *argv[]){
 	atacar(COM, 5, 5, barcos_COM, barcos_HUM, &vidasHUM, &vidasCOM);
 //Jogo
 
-	int *x;
-	int *y;
+//	int *x;
+//	int *y;
 	int *busca;
 	int *barco;
 	int *passo;
@@ -42,7 +42,7 @@ int main(int argc, char const *argv[]){
 		
 		printf("Digite as coordenadas (x,y) para o ataque: ");
 
-		scanf("%s", ataque);
+//		scanf("%s", ataque);
 
 		int teste = traduzir("c , 4 \0", &ataque_x, &ataque_y);
 		printf("%d %d x e y\n" , ataque_x, ataque_y);
@@ -55,7 +55,7 @@ int main(int argc, char const *argv[]){
 	
 		atacar(COM, ataque_x, ataque_y, barcos_COM, barcos_HUM, &vidasHUM, &vidasCOM);
 
-		atacarComp(COM, barcos_COM, barcos_HUM, &vidasHUM, &vidasCOM, &busca, &barco);
+//		atacarComp(COM, barcos_COM, barcos_HUM, &vidasHUM, &vidasCOM, &busca, &barco);
 
 		ult_ataque_x = ataque_x + 1;
 		ult_ataque_y = ataque_y + 65;

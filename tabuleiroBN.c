@@ -39,7 +39,7 @@ typedef struct barco{
 	char direcao;
 }BARCO;
 
-int inserir(TAB *t,BARCO * b , int x , int y, int d, int tipo){
+int inserir(TAB *t,BARCO * b , int x , int y, int d, int tipo, int revelar){
 	int i;
 	TAB *aux;
 	for (i = 0; i < y; i++)
@@ -52,14 +52,16 @@ int inserir(TAB *t,BARCO * b , int x , int y, int d, int tipo){
 			b->proa = t;
 			b->proa_final = t;
 			t->celula = '@';
-			t->descoberto = 1;
+			if(revelar)
+				t->descoberto = 1;
 			return 1;
 		}
 		if(tipo == 10){
 			b->proa = t;
 			b->proa_final = t;
 			t->celula = '&';
-			t->descoberto = 1;
+			if(revelar)
+				t->descoberto = 1;
 			return 1;
 		}aux = t;
 		if(d == 0){
@@ -71,7 +73,8 @@ int inserir(TAB *t,BARCO * b , int x , int y, int d, int tipo){
 			}if(aux != NULL){
 				for (i = 0; i < b->pecasRest; ++i){
 					t->tipo = tipo;	
-					t->descoberto = 1;	
+					if(revelar)
+						t->descoberto = 1;	
 					if(i == 0){
 						b->proa = t;
 						t->celula = '>';
@@ -95,7 +98,8 @@ int inserir(TAB *t,BARCO * b , int x , int y, int d, int tipo){
 			}if(aux != NULL){
 				for (i = 0; i < b->pecasRest; ++i){
 					t->tipo = tipo;
-					t->descoberto = 1;
+					if(revelar)
+						t->descoberto = 1;
 					if(i == 0){
 						t->celula = '<';
 						b->proa = t;
@@ -120,7 +124,8 @@ int inserir(TAB *t,BARCO * b , int x , int y, int d, int tipo){
 			}if(aux != NULL){
 				for (i = 0; i < b->pecasRest; ++i){
 					t->tipo = tipo;
-					t->descoberto = 1;
+					if(revelar)
+						t->descoberto = 1;
 					if(i == 0){
 						b->proa = t;
 						t->celula = 'v';
@@ -145,7 +150,8 @@ int inserir(TAB *t,BARCO * b , int x , int y, int d, int tipo){
 			}if(aux != NULL){
 				for (i = 0; i < b->pecasRest; ++i){
 					t->tipo = tipo;
-					t->descoberto = 1;
+					if(revelar)
+						t->descoberto = 1;
 					if(i == 0){
 						b->proa  = t;
 						t->celula = '^';
@@ -167,7 +173,8 @@ int inserir(TAB *t,BARCO * b , int x , int y, int d, int tipo){
 	return 0;
 }
 
-void poisicionando_barcos(TAB* t, BARCO b[9]){
+void poisicionando_barcos(TAB* t, BARCO b[9], int revelar){
+	printf("pb...\n");
 	int barcos = 0,x,y,i,d;
 	while(barcos <= 8){
 		if(barcos <= 1 || barcos == 8)
@@ -186,7 +193,7 @@ void poisicionando_barcos(TAB* t, BARCO b[9]){
 		x = rand()%12;
 		y = rand()%12;
 		d = rand()%4;
-		i = inserir(t , &b[barcos] , x , y , d , barcos + 2);
+		i = inserir(t , &b[barcos] , x , y , d , barcos + 2, revelar);
 		if(i == 1){
 			barcos++;
 		}

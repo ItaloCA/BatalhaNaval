@@ -19,9 +19,9 @@ typedef struct barco{
 	char direcao;
 }BARCO;
 
-int inserir(TAB*, BARCO*, int, int, int, int);
+int inserir(TAB*, BARCO*, int, int, int, int, int);
 
-void poisicionando_barcos(TAB*, BARCO [9]);
+void poisicionando_barcos(TAB*, BARCO [9], int);
 
 void criar_tabuleiro(TAB**);
 
