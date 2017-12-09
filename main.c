@@ -11,7 +11,7 @@ int main(int argc, char const *argv[]){
 	BARCO barcos_COM[9];
 	int vidasHUM = 8;
 	int vidasCOM = 8;
-	int x, y, ult_alvo_x, ult_alvo_y, ult_ataque_x, ult_ataque_y, ataque_x, ataque_y;
+	int ult_alvo_x, ult_alvo_y, ult_ataque_x, ult_ataque_y, ataque_x, ataque_y;
 	char ataque[21];
 	int rodada = 0;
 	srand(time(NULL));
@@ -27,11 +27,13 @@ int main(int argc, char const *argv[]){
 	atacar(COM, 5, 5, barcos_COM, barcos_HUM, &vidasHUM, &vidasCOM);
 //Jogo
 
-//	int *x;
-//	int *y;
-	int *busca;
-	int *barco;
-	int *passo;
+	int x;
+	int y;
+
+	int busca;
+	int alvo;
+	int atacProa;
+	int passo;
 	
 
 	while(vidasHUM && vidasCOM){
@@ -52,16 +54,15 @@ int main(int argc, char const *argv[]){
 			scanf("%s", ataque);   
 		}
 //*/
-	
 		atacar(COM, ataque_x, ataque_y, barcos_COM, barcos_HUM, &vidasHUM, &vidasCOM);
 
-//		atacarComp(COM, barcos_COM, barcos_HUM, &vidasHUM, &vidasCOM, &busca, &barco);
+	    //Vez do Computador
+		atacarComp(COM, barcos_COM, barcos_HUM, &vidasHUM, &vidasCOM, &x, &y &busca, &alvo, &passo, &atacProa);
 
 		ult_ataque_x = ataque_x + 1;
 		ult_ataque_y = ataque_y + 65;
 		ult_alvo_x = 1;
 		ult_alvo_y = 1 + 65;
-/*	//Vez do Computador
 
 //*/
 		vidasHUM -= 4; //teste
