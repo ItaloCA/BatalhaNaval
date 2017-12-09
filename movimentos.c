@@ -163,10 +163,10 @@ int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas, int 
 
 		atacar(tabu, *x, *y, inim_barc, meus_barc, vid_mi, vid_hi);
 		
-		for (i = 0; i < y; i++){
+		for (i = 0; i < *y; i++){
 			t = t->dir;
 		}
-		for (i = 0; i < x; i++){
+		for (i = 0; i < *x; i++){
 			t = t->baixo;
 		}
 
@@ -177,26 +177,26 @@ int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas, int 
 			}
 		}	
 		return 0;
-	}else{ //                      vvvvvvv BUSCA vvvvvvv
+	}else{ //BUSCA
 		
 		//Indo para a posicao da jogada anterior
-		for (i = 0; i < y; i++){
+		for (i = 0; i < *y; i++){
 			t = t->dir;
 		}
-		for (i = 0; i < x; i++){
+		for (i = 0; i < *x; i++){
 			t = t->baixo;
 		}
 
 		//SISTEMA DE BUSCA
 
-		if(t->celula == "#"){
+		if(t->celula == '#'){
 			*alvo = t->tipo - 1;
 			if(*passo == 0){
 			//PASSO ZERO
 				if(t->cima != NULL){
 					atacar(tabu, *x-1, *y, inim_barc, meus_barc, vid_mi, vid_hi);
 					*x--;
-					if(t->celula == "#" && t->tipo - 1 == *alvo){
+					if(t->celula == '#' && t->tipo - 1 == *alvo){
 						return 0;
 					}else{
 						*passo++;
@@ -208,26 +208,44 @@ int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas, int 
 					*y++;
 					return 0;
 				}
-			}else if(passo == 1){
+			}else if(*passo == 1){
 			//PASSO UM
-
-			}else if(passo == 1){
+				atacar(tabu, *x+1, *y+1, inim_barc, meus_barc, vid_mi, vid_hi);
+				*x++;
+				*y++;
+				if(t->celula == '#' && t->tipo - 1 == *alvo){
+						return 0;
+					}else{
+						*passo++;
+						return 0;
+					}
+			}else if(*passo == 1){
 			//PASSO DOIS
-
+				atacar(tabu, *x+1, *y-1, inim_barc, meus_barc, vid_mi, vid_hi);
+				*x++;
+				*y--;
+				if(t->celula == '#' && t->tipo - 1 == *alvo){
+						return 0;
+					}else{
+						*passo++;
+						return 0;
+					}
 			}
-			else if(passo == 1){
+			else if(*passo == 1){
 			//PASSO TRES
-
-			}else if(passo == 1){
-			//PASSO QUATRO
-
-			}else if(passo == 1){
-			//PASSO CINCO
-
+				atacar(tabu, *x-1, *y-1, inim_barc, meus_barc, vid_mi, vid_hi);
+				*x--;
+				*y--;
+				if(t->celula == '#' && t->tipo - 1 == *alvo){
+						return 0;
+					}else{
+						*passo++;
+						return 0;
+					}
 			}
-		}else if(t->celula == "^" || *atacProa == 1){
+		}else if(t->celula == '^' || *atacProa == 1){
 			//SE ACHAR UMA PROA CIMA, DIRECAO BAIXO
-			while((t->baixo)->descoberto == -1 && (t->baixo)->celula != "v"){
+			while((t->baixo)->descoberto == -1 && (t->baixo)->celula != 'v'){
 				*x++;
 			}
 			atacar(tabu, *x+1, *y, inim_barc, meus_barc, vid_mi, vid_hi);
@@ -243,12 +261,57 @@ int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas, int 
 				return 0;
 			}
 		}
-		}else if(t->celula == "v"){
-				//SE ACHAR UMA PROA BAIXO
-		}else if(t->celula == "<"){
-				//SE ACHAR UMA PROA ESQUERDA
-		}else if(t->celula == ">"){
-				//SE ACHAR UMA PROA DIREITA
+		}else if(t->celula == 'v'){
+			//SE ACHAR UMA PROA BAIXO
+			while((t->cima)->descoberto == -1 && (t->cima)->celula != '^'){
+				*x--;
+			}
+			atacar(tabu, *x-1, *y, inim_barc, meus_barc, vid_mi, vid_hi);
+			*x--;
+			if(b[t->tipo - 1].pecasRest != 0){
+				*busca = 1;
+				*atacProa = 1;
+				return 0;
+			}else{
+				*busca = 0;
+				*alvo = 0;
+				*atacProa = 0;
+				return 0;
+			}
+		}else if(t->celula == '<'){
+			//SE ACHAR UMA PROA ESQUERDA
+			while((t->dir)->descoberto == -1 && (t->dir)->celula != '>'){
+				*y++;
+			}
+			atacar(tabu, *x, *y+1, inim_barc, meus_barc, vid_mi, vid_hi);
+			*y++;
+			if(b[t->tipo - 1].pecasRest != 0){
+				*busca = 1;
+				*atacProa = 1;
+				return 0;
+			}else{
+				*busca = 0;
+				*alvo = 0;
+				*atacProa = 0;
+				return 0;
+			}
+		}else if(t->celula == '>'){
+			//SE ACHAR UMA PROA DIREITA
+			while((t->esq)->descoberto == -1 && (t->esq)->celula != '<'){
+				*y--;
+			}
+			atacar(tabu, *x, *y-1, inim_barc, meus_barc, vid_mi, vid_hi);
+			*y--;
+			if(b[t->tipo - 1].pecasRest != 0){
+				*busca = 1;
+				*atacProa = 1;
+				return 0;
+			}else{
+				*busca = 0;
+				*alvo = 0;
+				*atacProa = 0;
+				return 0;
+			}
 		}
 }
 //*/
