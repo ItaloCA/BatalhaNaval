@@ -15,14 +15,14 @@ typedef struct tabuleiro{
 typedef struct barco{
 	short int pecasRest;
 	TAB* proa;
+	TAB* proa_final;
 	char direcao;
 }BARCO;
 
 int inserir(TAB*, BARCO*, int, int, int, int);
 
-void poisicionando_barcos(TAB*, BARCO*);
+void poisicionando_barcos(TAB*, BARCO [9]);
 
 void criar_tabuleiro(TAB**);
 
 void imprimir(TAB*, TAB*);
-

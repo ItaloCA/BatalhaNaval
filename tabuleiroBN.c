@@ -35,6 +35,7 @@ typedef struct tabuleiro{
 typedef struct barco{
 	short int pecasRest;
 	TAB* proa;
+	TAB* proa_final;
 	char direcao;
 }BARCO;
 
@@ -46,16 +47,27 @@ int inserir(TAB *t,BARCO * b , int x , int y, int d, int tipo){
 	for (i = 0; i < x; i++)
 		t = t->dir;
 	aux = t;
-	printf("teste inserir\n");
 	if(t->celula == 'O'){
-		if(tipo < 3){
-			if(tipopo)
+		if(tipo < 4 ){
+			b->proa = t;
+			b->proa_final = t;
+			t->celula = '@';
+			t->descoberto = 1;
+			return 1;
 		}
+		if(tipo == 10){
+			b->proa = t;
+			b->proa_final = t;
+			t->celula = '&';
+			t->descoberto = 1;
+			return 1;
+		}aux = t;
 		if(d == 0){
-			for(i = 0 ; i < b->pecasRest && aux != NULL ; i++){
+			for(i = 0 ; aux != NULL && i < b->pecasRest ; i++){
 				if (aux->celula != 'O')
 					aux = NULL;
-				aux = aux->esq;
+				else
+					aux = aux->esq;
 			}if(aux != NULL){
 				for (i = 0; i < b->pecasRest; ++i){
 					t->tipo = tipo;	
@@ -63,9 +75,10 @@ int inserir(TAB *t,BARCO * b , int x , int y, int d, int tipo){
 					if(i == 0){
 						b->proa = t;
 						t->celula = '>';
-					}else if(i == b->pecasRest - 1)
+					}else if(i == b->pecasRest - 1){
 						t->celula = '<';
-					else 
+						b->proa_final = t; 
+					}else
 						t->celula = '#';
 					t = t->esq;	
 				}
@@ -74,10 +87,11 @@ int inserir(TAB *t,BARCO * b , int x , int y, int d, int tipo){
 				return 0;
 		}
 		if(d == 1){
-			for(i = 0 ; i < b->pecasRest && aux != NULL ; i++){
+			for(i = 0 ; aux != NULL && i < b->pecasRest ; i++){
 				if (aux->celula != 'O')
 					aux = NULL;
-				aux = aux->dir;
+				else
+					aux = aux->dir;
 			}if(aux != NULL){
 				for (i = 0; i < b->pecasRest; ++i){
 					t->tipo = tipo;
@@ -85,8 +99,10 @@ int inserir(TAB *t,BARCO * b , int x , int y, int d, int tipo){
 					if(i == 0){
 						t->celula = '<';
 						b->proa = t;
-					}else if(i == b->pecasRest - 1)
+					}else if(i == b->pecasRest - 1){
+						b->proa_final = t; 
 						t->celula = '>';
+					}
 					else 
 						t->celula = '#';
 					t = t->dir;
@@ -96,10 +112,11 @@ int inserir(TAB *t,BARCO * b , int x , int y, int d, int tipo){
 				return 0;
 		}
 		if(d == 2){
-			for(i = 0 ; i < b->pecasRest && aux != NULL ; i++){
+			for(i = 0 ;aux != NULL && i < b->pecasRest ; i++){
 				if (aux->celula != 'O')
 					aux = NULL;
-				aux = aux->cima;
+				else
+					aux = aux->cima;
 			}if(aux != NULL){
 				for (i = 0; i < b->pecasRest; ++i){
 					t->tipo = tipo;
@@ -107,8 +124,10 @@ int inserir(TAB *t,BARCO * b , int x , int y, int d, int tipo){
 					if(i == 0){
 						b->proa = t;
 						t->celula = 'v';
-					}else if(i == b->pecasRest - 1)
+					}else if(i == b->pecasRest - 1){
+						b->proa_final = t; 
 						t->celula = '^';
+					}
 					else 
 						t->celula = '#';
 					t = t->cima;
@@ -118,10 +137,11 @@ int inserir(TAB *t,BARCO * b , int x , int y, int d, int tipo){
 				return 0;
 		}
 		if(d == 3){
-			for(i = 0 ; i < b->pecasRest && aux != NULL ; i++){
+			for(i = 0 ; aux != NULL && i < b->pecasRest ; i++){
 				if (aux->celula != 'O')
 					aux = NULL;
-				aux = t->baixo;
+				else
+					aux = aux->baixo;
 			}if(aux != NULL){
 				for (i = 0; i < b->pecasRest; ++i){
 					t->tipo = tipo;
@@ -129,8 +149,10 @@ int inserir(TAB *t,BARCO * b , int x , int y, int d, int tipo){
 					if(i == 0){
 						b->proa  = t;
 						t->celula = '^';
-					}else if(i == b->pecasRest - 1)
+					}else if(i == b->pecasRest - 1){
+						b->proa_final = t;
 						t->celula = 'v';
+					}
 					else 
 						t->celula = '#';
 					t = t->baixo;
@@ -142,38 +164,30 @@ int inserir(TAB *t,BARCO * b , int x , int y, int d, int tipo){
 
 	}else
 		return 0;
-	
-	return 0 ;
-
-
+	return 0;
 }
 
-void poisicionando_barcos(TAB* t, BARCO **b[9]){
-	printf("p\n");
+void poisicionando_barcos(TAB* t, BARCO b[9]){
 	int barcos = 0,x,y,i,d;
 	while(barcos <= 8){
-		printf("_F_\n");
-		if(barcos <= 2 )
-			b[barcos]->pecasRest = 1;
-		else if(barcos <= 5)
-			b[barcos]->pecasRest = 2;
+		if(barcos <= 1 || barcos == 8)
+			b[barcos].pecasRest = 1;
+		else if(barcos <= 4)
+			b[barcos].pecasRest = 2;
+		else if(barcos <= 6)
+			b[barcos].pecasRest = 3;
 		else if(barcos <= 7)
-			b[barcos]->pecasRest = 3;
-		else if(barcos <= 8)
-			b[barcos]->pecasRest = 5;
-		b[barcos]->proa = NULL;
-		b[barcos]->direcao = ' ';
+			b[barcos].pecasRest = 5;
+		b[barcos].proa = NULL;
+		b[barcos].direcao = ' ';
 		barcos++;
 	}barcos = 0;
-	printf("saiu\n");
 	while(barcos <= 8){
-		printf("entrou\n");
 		x = rand()%12;
 		y = rand()%12;
 		d = rand()%4;
-		i = inserir(t , &b[barcos] , x , y , d , barcos+2);
+		i = inserir(t , &b[barcos] , x , y , d , barcos + 2);
 		if(i == 1){
-			printf("i:%d\n x:%d \n y:%d \n",i,x,y);
 			barcos++;
 		}
 	}
