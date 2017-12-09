@@ -48,18 +48,20 @@ int inserir(TAB *t,BARCO * b , int x , int y, int d, int tipo, int revelar){
 		t = t->dir;
 	aux = t;
 	if(t->celula == 'O'){
-		if(tipo < 4 ){
+		if(tipo == 1 ){
 			b->proa = t;
 			b->proa_final = t;
-			t->celula = '@';
+			t->celula = '&';
+			t->tipo = tipo;
 			if(revelar)
 				t->descoberto = 1;
 			return 1;
 		}
-		if(tipo == 10){
+		else if(tipo < 4){
 			b->proa = t;
 			b->proa_final = t;
-			t->celula = '&';
+			t->celula = '@';
+			t->tipo = tipo;
 			if(revelar)
 				t->descoberto = 1;
 			return 1;
@@ -77,6 +79,7 @@ int inserir(TAB *t,BARCO * b , int x , int y, int d, int tipo, int revelar){
 						t->descoberto = 1;	
 					if(i == 0){
 						b->proa = t;
+						b->direcao = 'e';
 						t->celula = '>';
 					}else if(i == b->pecasRest - 1){
 						t->celula = '<';
@@ -102,6 +105,7 @@ int inserir(TAB *t,BARCO * b , int x , int y, int d, int tipo, int revelar){
 						t->descoberto = 1;
 					if(i == 0){
 						t->celula = '<';
+						b->direcao = 'd';
 						b->proa = t;
 					}else if(i == b->pecasRest - 1){
 						b->proa_final = t; 
@@ -128,6 +132,7 @@ int inserir(TAB *t,BARCO * b , int x , int y, int d, int tipo, int revelar){
 						t->descoberto = 1;
 					if(i == 0){
 						b->proa = t;
+						b->direcao = 'c';
 						t->celula = 'v';
 					}else if(i == b->pecasRest - 1){
 						b->proa_final = t; 
@@ -154,6 +159,7 @@ int inserir(TAB *t,BARCO * b , int x , int y, int d, int tipo, int revelar){
 						t->descoberto = 1;
 					if(i == 0){
 						b->proa  = t;
+						b->direcao = 'b';
 						t->celula = '^';
 					}else if(i == b->pecasRest - 1){
 						b->proa_final = t;
@@ -174,26 +180,26 @@ int inserir(TAB *t,BARCO * b , int x , int y, int d, int tipo, int revelar){
 }
 
 void poisicionando_barcos(TAB* t, BARCO b[9], int revelar){
-	printf("pb...\n");
+
 	int barcos = 0,x,y,i,d;
 	while(barcos <= 8){
-		if(barcos <= 1 || barcos == 8)
+		if(barcos < 3)
 			b[barcos].pecasRest = 1;
-		else if(barcos <= 4)
+		else if(barcos < 6)
 			b[barcos].pecasRest = 2;
-		else if(barcos <= 6)
+		else if(barcos < 8)
 			b[barcos].pecasRest = 3;
-		else if(barcos <= 7)
+		else if(barcos < 9)
 			b[barcos].pecasRest = 5;
 		b[barcos].proa = NULL;
 		b[barcos].direcao = ' ';
 		barcos++;
-	}barcos = 0;
-	while(barcos <= 8){
+	}barcos = 1;
+	while(barcos < 10){
 		x = rand()%12;
 		y = rand()%12;
 		d = rand()%4;
-		i = inserir(t , &b[barcos] , x , y , d , barcos + 2, revelar);
+		i = inserir(t , &b[barcos - 1] , x , y , d , barcos, revelar);
 		if(i == 1){
 			barcos++;
 		}

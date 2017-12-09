@@ -7,15 +7,14 @@
 
 void revelar_barco(BARCO embarcacao, int tipo){
 	int i;
+	printf("\nREVELANDO\n\n");
+	printf("%d %c %d %c\n", embarcacao.pecasRest, embarcacao.direcao, (embarcacao.proa)->tipo, (embarcacao.proa)->celula);
 	TAB * proa = embarcacao.proa;
 	if(embarcacao.direcao == 'c'){
 		if(tipo <= 6){
-			for (i = 0; i < 2; i++){
-				proa->descoberto = 1;
-				proa = proa->cima;
-			}
+			
 		}
-		else if(tipo > 6 && tipo <= 8){
+		else if(tipo <= 8){
 			for (i = 0; i < 3; i++){
 				proa->descoberto = 1;
 				proa = proa->cima;
@@ -30,12 +29,9 @@ void revelar_barco(BARCO embarcacao, int tipo){
 	}
 	if(embarcacao.direcao == 'b'){
 		if(tipo <= 6){
-			for (i = 0; i < 2; i++){
-				proa->descoberto = 1;
-				proa = proa->baixo;
-			}
+			
 		}
-		else if(tipo > 6 && tipo <= 8){
+		else if(tipo <= 8){
 			for (i = 0; i < 3; i++){
 				proa->descoberto = 1;
 				proa = proa->baixo;
@@ -50,12 +46,9 @@ void revelar_barco(BARCO embarcacao, int tipo){
 	}
 	if(embarcacao.direcao == 'e'){
 		if(tipo <= 6){
-			for (i = 0; i < 2; i++){
-				proa->descoberto = 1;
-				proa = proa->esq;
-			}
+			
 		}
-		else if(tipo > 6 && tipo <= 8){
+		else if(tipo <= 8){
 			for (i = 0; i < 3; i++){
 				proa->descoberto = 1;
 				proa = proa->esq;
@@ -70,12 +63,9 @@ void revelar_barco(BARCO embarcacao, int tipo){
 	}
 	if(embarcacao.direcao == 'd'){
 		if(tipo <= 6){
-			for (i = 0; i < 2; i++){
-				proa->descoberto = 1;
-				proa = proa->dir;
-			}
+			
 		}
-		else if(tipo > 6 && tipo <= 8){
+		else if(tipo <= 8){
 			for (i = 0; i < 3; i++){
 				proa->descoberto = 1;
 				proa = proa->dir;
@@ -93,7 +83,7 @@ void revelar_barco(BARCO embarcacao, int tipo){
 
 
 
-int atacar(TAB *t, int x, int y, BARCO *b, BARCO *frota, int* vidas, int* hp_inimigo){
+int atacar(TAB *t, int x, int y, BARCO *b, BARCO *frota, int* vidas, int* hp_inimigo, int COMatacando){
 	int i;
 
 	for (i = 0; i < y; i++){
@@ -103,21 +93,32 @@ int atacar(TAB *t, int x, int y, BARCO *b, BARCO *frota, int* vidas, int* hp_ini
 		t = t->baixo;
 	}	
 
-	if(t->descoberto != -1 && t->descoberto != 1){
+	if(t->descoberto != -1 && (t->descoberto != 1 || COMatacando)){
 
 
 		if(t->tipo < 4){
-			t->descoberto = 1;
-			(b[(t->tipo) - 1]).pecasRest -= 1;
+
+			if(!COMatacando || t->tipo == 0)
+				t->descoberto = 1;
+			else
+				t->descoberto = -1;
+			if(t->tipo)
+				(b[(t->tipo) - 1]).pecasRest -= 1;
 
 			if(t->tipo == 1){   //Caso JANGADA. Pode ser 1 tambem, sujeito a  mudanca
 				if((frota[1]).pecasRest){
 					(frota[1]).pecasRest = 0;
-					((frota[1]).proa)->descoberto = 1;
+					if(!COMatacando)
+						((frota[1]).proa)->descoberto = -1;
+					else
+						((frota[1]).proa)->descoberto = 1;
 				}
 				else {
 					(frota[2]).pecasRest = 0;
-					((frota[2]).proa)->descoberto = 1;
+					if(!COMatacando)
+						((frota[2]).proa)->descoberto = -1;
+					else
+						((frota[2]).proa)->descoberto = 1;
 				}
 				*vidas--;
 			}else                //Caso SUBMARINO
@@ -127,14 +128,15 @@ int atacar(TAB *t, int x, int y, BARCO *b, BARCO *frota, int* vidas, int* hp_ini
 		}
 
 		//OUTROS CASOS
-		b[t->tipo - 1].pecasRest -= 1;
-		if(t->celula != '#')
+		b[t->tipo - 1].pecasRest--;
+		if(t->celula != '#' && !COMatacando)
 			t->descoberto = 1;
 		else
 			t->descoberto = -1;
 
-		if(!(b[t->tipo - 1].pecasRest))
-			revelar_barco(b[t->tipo + 1], t->tipo);
+		if(b[t->tipo - 1].pecasRest < 1)
+			if(!COMatacando)
+				revelar_barco(b[t->tipo - 1], t->tipo);
 			*hp_inimigo--;
 
 		return 0;
@@ -154,6 +156,7 @@ int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas, int 
 	BARCO *inim_barc = b;
 	int *vid_hi = hp_inimigo;
 	int *vid_mi = vidas;
+	int i;
 
 
 	if(!(*busca)){
@@ -161,7 +164,7 @@ int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas, int 
 		*x = rand()%12;
 		*y = rand()%12;
 
-		atacar(tabu, *x, *y, inim_barc, meus_barc, vid_mi, vid_hi);
+		atacar(tabu, *x, *y, inim_barc, meus_barc, vid_mi, vid_hi, 1);
 		
 		for (i = 0; i < *y; i++){
 			t = t->dir;
@@ -194,7 +197,7 @@ int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas, int 
 			if(*passo == 0){
 			//PASSO ZERO
 				if(t->cima != NULL){
-					atacar(tabu, *x-1, *y, inim_barc, meus_barc, vid_mi, vid_hi);
+					atacar(tabu, *x-1, *y, inim_barc, meus_barc, vid_mi, vid_hi, 1);
 					*x--;
 					if(t->celula == '#' && t->tipo - 1 == *alvo){
 						return 0;
@@ -204,13 +207,13 @@ int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas, int 
 					}
 
 				}else{
-					atacar(tabu, *x, *y+1, inim_barc, meus_barc, vid_mi, vid_hi);
+					atacar(tabu, *x, *y+1, inim_barc, meus_barc, vid_mi, vid_hi, 1);
 					*y++;
 					return 0;
 				}
 			}else if(*passo == 1){
 			//PASSO UM
-				atacar(tabu, *x+1, *y+1, inim_barc, meus_barc, vid_mi, vid_hi);
+				atacar(tabu, *x+1, *y+1, inim_barc, meus_barc, vid_mi, vid_hi, 1);
 				*x++;
 				*y++;
 				if(t->celula == '#' && t->tipo - 1 == *alvo){
@@ -221,7 +224,7 @@ int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas, int 
 					}
 			}else if(*passo == 1){
 			//PASSO DOIS
-				atacar(tabu, *x+1, *y-1, inim_barc, meus_barc, vid_mi, vid_hi);
+				atacar(tabu, *x+1, *y-1, inim_barc, meus_barc, vid_mi, vid_hi, 1);
 				*x++;
 				*y--;
 				if(t->celula == '#' && t->tipo - 1 == *alvo){
@@ -233,7 +236,7 @@ int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas, int 
 			}
 			else if(*passo == 1){
 			//PASSO TRES
-				atacar(tabu, *x-1, *y-1, inim_barc, meus_barc, vid_mi, vid_hi);
+				atacar(tabu, *x-1, *y-1, inim_barc, meus_barc, vid_mi, vid_hi, 1);
 				*x--;
 				*y--;
 				if(t->celula == '#' && t->tipo - 1 == *alvo){
@@ -248,7 +251,7 @@ int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas, int 
 			while((t->baixo)->descoberto == -1 && (t->baixo)->celula != 'v'){
 				*x++;
 			}
-			atacar(tabu, *x+1, *y, inim_barc, meus_barc, vid_mi, vid_hi);
+			atacar(tabu, *x+1, *y, inim_barc, meus_barc, vid_mi, vid_hi, 1);
 			*x++;
 			if(b[t->tipo - 1].pecasRest != 0){
 				*busca = 1;
@@ -260,13 +263,12 @@ int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas, int 
 				*atacProa = 0;
 				return 0;
 			}
-		}
 		}else if(t->celula == 'v'){
 			//SE ACHAR UMA PROA BAIXO
 			while((t->cima)->descoberto == -1 && (t->cima)->celula != '^'){
 				*x--;
 			}
-			atacar(tabu, *x-1, *y, inim_barc, meus_barc, vid_mi, vid_hi);
+			atacar(tabu, *x-1, *y, inim_barc, meus_barc, vid_mi, vid_hi, 1);
 			*x--;
 			if(b[t->tipo - 1].pecasRest != 0){
 				*busca = 1;
@@ -283,7 +285,7 @@ int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas, int 
 			while((t->dir)->descoberto == -1 && (t->dir)->celula != '>'){
 				*y++;
 			}
-			atacar(tabu, *x, *y+1, inim_barc, meus_barc, vid_mi, vid_hi);
+			atacar(tabu, *x, *y+1, inim_barc, meus_barc, vid_mi, vid_hi, 1);
 			*y++;
 			if(b[t->tipo - 1].pecasRest != 0){
 				*busca = 1;
@@ -300,7 +302,7 @@ int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas, int 
 			while((t->esq)->descoberto == -1 && (t->esq)->celula != '<'){
 				*y--;
 			}
-			atacar(tabu, *x, *y-1, inim_barc, meus_barc, vid_mi, vid_hi);
+			atacar(tabu, *x, *y-1, inim_barc, meus_barc, vid_mi, vid_hi, 1);
 			*y--;
 			if(b[t->tipo - 1].pecasRest != 0){
 				*busca = 1;
@@ -313,10 +315,11 @@ int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas, int 
 				return 0;
 			}
 		}
+	}
 }
 //*/
 int traduzir(char ataque_o[21], int * ataquex ,int * ataquey){
-	printf("_I_\n");
+
 	int aux_char;
 	int  i = 0, aux_int,cont;
 	char ataque[21];
@@ -329,18 +332,16 @@ int traduzir(char ataque_o[21], int * ataquex ,int * ataquey){
 			ataque[i] = ataque_o[i] - 32;
 	}
 
-	printf("%s\n%s\n", ataque_o, ataque);
-
 	i = 0;
 	cont = 0;
-	printf("_I_\n");
+
 	while(ataque[i] != '\0'){
-		printf("AQUI\n");
+
 		if(ataque[i] >= 'A' && ataque[i] <= 'L')
 			aux_char = ((int)ataque[i]) - 65;
-		else if(ataque[i] >= '1' && ataque[i] <= '9' ){
+		else if(ataque[i] >= '0' && ataque[i] <= '9' ){
 			cont++;
-			printf("w\n");
+
 			if(cont > 1 && aux_int == 1)
 				aux_int = (aux_int*10) + ((int)ataque[i] - 48);
 			else
@@ -349,12 +350,14 @@ int traduzir(char ataque_o[21], int * ataquex ,int * ataquey){
 		i++;
 	}
 	aux_int--;
-	printf("%d %d  x y\n" , aux_int, aux_char);
+
 	if(aux_int > -1 && aux_char > -1){
-		printf("_I_\n");
 		*ataquex = aux_int;
 		*ataquey = aux_char;
-		return 0; 
-	}else
-		return 1;
+		if(*ataquex < 12 && *ataquey < 12)
+			return 0;
+
+	}
+
+	return 1;
 }
