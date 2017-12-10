@@ -11,8 +11,8 @@ int main(int argc, char const *argv[]){
 	BARCO barcos_COM[9];	// vetor de enbarcaçoes do Computador.
 	int vidasHUM = 8;
 	int vidasCOM = 8;
-	int jogar = 0;
-	int ult_ataque_x, ult_ataque_y, ataque_x, ataque_y;
+	int jogar = 1;
+	int ult_ataque_x, ult_ataque_y, ataque_x, ataque_y, c;
 	char entrada[21];		//cadeia de caracteres que armazena a entrada do teclado.
 	int rodada = 0, ataque;//contador de rodadas; variavel que verifica a validade da entrada.
 	srand(time(NULL));		//define a seed da funçao rand() como sendo o relogio.
@@ -48,9 +48,9 @@ int main(int argc, char const *argv[]){
 			printf("Digite as coordenadas (x,y) para o ataque: ");
 
 			//laço que repete ate que o jogador entre coordenadas que nao foram atacadas
-			entrada = 2;         // Se entrada = 1, a casa ja foi atacada, se entrada = 0 a casa em (x, y) pode ser atacada
+			ataque = 2;         // Se entrada = 1, a casa ja foi atacada, se entrada = 0 a casa em (x, y) pode ser atacada
 			while(ataque){	
-				if(entrada == 1)
+				if(ataque == 1)
 					printf("Casa ja foi atacada, escolha outras coordenadas\n");
 				gets(entrada);
 				//Laço que repete ate que o jogador digite coordenadas validas

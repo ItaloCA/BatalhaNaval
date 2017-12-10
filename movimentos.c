@@ -208,6 +208,7 @@ int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas, int 
 	BARCO *inim_barc = b;
 	int *vid_hi = hp_inimigo;
 	int *vid_mi = vidas;
+	int i;
 
 
 	if(!(*busca)){
