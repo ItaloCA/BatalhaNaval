@@ -4,4 +4,4 @@ int atacar(TAB *t, int x, int y, BARCO *b, BARCO *frota, int* vidas, int* hp_ini
 
 int traduzir(char *,int*,int*);
 
-int atacarComp(TAB *t, BARCO *frota, BARCO *b, int*, int*, int*, int*, int*, int*, int*,int*);
+int atacarComp(TAB *t, BARCO *frota, BARCO *b, int*, int*, int*, int*, int*, int*, int*);

@@ -150,10 +150,10 @@ int atacar(TAB *t, int x, int y, BARCO *b, BARCO *frota, int* vidas, int* hp_ini
 					else
 						((frota[2]).proa)->descoberto = 1;
 				}
-				*vidas--;
-			}else
+				(*vidas) -= 1;
+			}else if(t->tipo)
+				(*hp_inimigo) -= 1;
 				//Caso SUBMARINO
-				*hp_inimigo--;
 
 			return 0;
 		}
@@ -165,10 +165,11 @@ int atacar(TAB *t, int x, int y, BARCO *b, BARCO *frota, int* vidas, int* hp_ini
 		else
 			t->descoberto = -1;
 
-		if(b[t->tipo - 1].pecasRest < 1)
+		if(b[t->tipo - 1].pecasRest < 1){	
 			if(!COMatacando)
 				revelar_barco(b[t->tipo - 1], t->tipo);
-			*hp_inimigo--;
+			(*hp_inimigo) -= 1;
+		}
 
 		return 0;
 
@@ -208,15 +209,17 @@ int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas, int 
 	BARCO *inim_barc = b;
 	int *vid_hi = hp_inimigo;
 	int *vid_mi = vidas;
-	int i;
+	int i = 1;
 
 
 	if(!(*busca)){
 		//Jogada rand utilizando a função atacar
-		*x = rand()%12;
-		*y = rand()%12;
+		while(i){	
+			*x = rand()%12;
+			*y = rand()%12;
 
-		atacar(tabu, *x, *y, inim_barc, meus_barc, vid_mi, vid_hi, 1);
+			i = atacar(tabu, *x, *y, inim_barc, meus_barc, vid_mi, vid_hi, 1);
+		}
 		
 		for (i = 0; i < *y; i++){
 			t = t->dir;
@@ -245,126 +248,194 @@ int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas, int 
 
 		//SISTEMA DE PASSOS
 
-		if(t->celula == '#'){
-			*alvo = t->tipo - 1;
+		if(t->celula == '#' || t->celula == '&' || t->celula == '@' || t->celula == 'O'){
+	
 			if(*passo == 0){
 			//PASSO ZERO
 				if(t->cima != NULL){
 					atacar(tabu, *x-1, *y, inim_barc, meus_barc, vid_mi, vid_hi, 1);
-					*x--;
-					if(t->celula == '#' && t->tipo - 1 == *alvo){
+					(*x) -= 1;
+					t = t->cima;
+					if((t->celula == '#' || t->celula == '^') && t->tipo - 1 == *alvo){
 						return 0;
 					}else{
-						*passo++;
+						(*passo) += 1;
 						return 0;
 					}
-
 				}else{
 					atacar(tabu, *x, *y+1, inim_barc, meus_barc, vid_mi, vid_hi, 1);
-					*y++;
+					(*y) += 1;
 					return 0;
 				}
 			}else if(*passo == 1){
 			//PASSO UM
 				atacar(tabu, *x+1, *y+1, inim_barc, meus_barc, vid_mi, vid_hi, 1);
-				*x++;
-				*y++;
+				(*x) += 1;
+				(*y) += 1;
+				t = t->baixo;
+				t = t->dir;
 				if(t->celula == '#' && t->tipo - 1 == *alvo){
-						return 0;
-					}else{
-						*passo++;
-						return 0;
-					}
+					*passo = 6;
+					return 0;
+				}else{
+					(*passo) += 1;
+					return 0;
+				}
 			}else if(*passo == 2){
 			//PASSO DOIS
 				atacar(tabu, *x+1, *y-1, inim_barc, meus_barc, vid_mi, vid_hi, 1);
-				*x++;
-				*y--;
+				(*x) += 1;
+				(*y) -= 1;
+				t = t->baixo;
+				t = t->esq;
 				if(t->celula == '#' && t->tipo - 1 == *alvo){
 						return 0;
 					}else{
-						*passo++;
+						(*passo) += 1;
 						return 0;
 					}
 			}
 			else if(*passo == 3){
 			//PASSO TRÊS
 				atacar(tabu, *x-1, *y-1, inim_barc, meus_barc, vid_mi, vid_hi, 1);
-				*x--;
-				*y--;
+				(*x) -= 1;
+				(*y) -= 1;
+				t = t->cima;
+				t = t->esq;
 				if(t->celula == '#' && t->tipo - 1 == *alvo){
-						return 0;
-					}else{
-						*passo++;
-						return 0;
+					return 0;
+				}else{
+					(*passo) += 1;
+					return 0;
+				}
+			}else if(*passo == 4){
+			//PASSO QUATRO
+				atacar(tabu, *x+1, *y, inim_barc, meus_barc, vid_mi, vid_hi, 1);
+				(*x) += 1;
+				t = t->baixo;
+				if((t->celula == '#' || t->celula == 'v') && t->tipo - 1 == *alvo){
+					if(b[t->tipo -1].pecasRest == 0){
+						*busca = 0;
+						*alvo = 0;
+						*passo = 0;
 					}
+					return 0;
+				}
+
+			}else if(*passo == 5){
+			//PASSO CINCO
+				atacar(tabu, *x, *y-1, inim_barc, meus_barc, vid_mi, vid_hi, 1);
+				(*y) -= 1;
+				t = t->esq;
+				if((t->celula == '#' || t->celula == '<') && t->tipo - 1 == *alvo){
+					if(b[t->tipo -1].pecasRest == 0){
+						*busca = 0;
+						*alvo = 0;
+						*passo = 0;
+					}
+					return 0;
+				}
+			}else if(*passo == 6){
+			//PASSO SEIS
+				atacar(tabu, *x, *y+1, inim_barc, meus_barc, vid_mi, vid_hi, 1);
+				(*y) += 1;
+				t = t->dir;
+				if((t->celula == '#' || t->celula == '>') && t->tipo - 1 == *alvo){
+					if(b[t->tipo -1].pecasRest == 0){
+						*busca = 0;
+						*alvo = 0;
+						*passo = 0;
+					}
+					return 0;
+				}
+			}else if(*passo == 7){
+				atacar(tabu, *x-1, *y, inim_barc, meus_barc, vid_mi, vid_hi, 1);
+				(*x) -= 1;
+				t = t->cima;
+				if((t->celula == '#' || t->celula == '^') && t->tipo - 1 == *alvo){
+					if(b[t->tipo -1].pecasRest == 0){
+						*busca = 0;
+						*alvo = 0;
+						*passo = 0;
+					}
+					return 0;
+				}
 			}
-		}else if(t->celula == '^' || *atacProa == 1){
+
+		}else if(t->celula == '^'){
 			//SE ACHAR UMA PROA PRA CIMA: DIREÇÃO BAIXO
-			while((t->baixo)->descoberto == -1 && (t->baixo)->celula != 'v'){
-				*x++;
+			while((t->baixo)->descoberto == -1){
+				(*x) += 1;
+				t = t->baixo;
 			}
 			atacar(tabu, *x+1, *y, inim_barc, meus_barc, vid_mi, vid_hi, 1);
-			*x++;
+			(*x) += 1;
+			t = t->baixo;
 			if(b[t->tipo - 1].pecasRest != 0){
 				*busca = 1;
-				*atacProa = 1;
+				*passo = 4;
 				return 0;
 			}else{
 				*busca = 0;
 				*alvo = 0;
-				*atacProa = 0;
+				*passo = 0;
 				return 0;
 			}
 		}else if(t->celula == 'v'){
 			//SE ACHAR UMA PROA PRA BAIXO: DIREÇÃO CIMA
-			while((t->cima)->descoberto == -1 && (t->cima)->celula != '^'){
-				*x--;
+			while((t->cima)->descoberto == -1){
+				(*x) -= 1;
+				t = t->cima;
 			}
 			atacar(tabu, *x-1, *y, inim_barc, meus_barc, vid_mi, vid_hi, 1);
-			*x--;
+			(*x) -= 1;
+			t = t->cima;
 			if(b[t->tipo - 1].pecasRest != 0){
 				*busca = 1;
-				*atacProa = 1;
+				*passo = 7;
 				return 0;
 			}else{
 				*busca = 0;
 				*alvo = 0;
-				*atacProa = 0;
+				*passo = 0;
 				return 0;
 			}
 		}else if(t->celula == '<'){
 			//SE ACHAR UMA PROA PRA ESQUERDA: DIREÇÃO DIREITA
-			while((t->dir)->descoberto == -1 && (t->dir)->celula != '>'){
-				*y++;
+			while((t->dir)->descoberto == -1){
+				(*y) += 1;
+				t = t->dir;
 			}
 			atacar(tabu, *x, *y+1, inim_barc, meus_barc, vid_mi, vid_hi, 1);
-			*y++;
+			(*y) += 1;
+			t = t->dir;
 			if(b[t->tipo - 1].pecasRest != 0){
 				*busca = 1;
-				*atacProa = 1;
+				*passo = 6;
 				return 0;
 			}else{
 				*busca = 0;
 				*alvo = 0;
-				*atacProa = 0;
+				*passo = 0;
 				return 0;
 			}
 		}else if(t->celula == '>'){
 			//SE ACHAR UMA PROA PRA DIREITA: DIREÇÃO ESQUERDA
-			while((t->esq)->descoberto == -1 && (t->esq)->celula != '<'){
-				*y--;
+			while((t->esq)->descoberto == -1){
+				(*y) -= 1;
+				t = t->esq;
 			}
 			atacar(tabu, *x, *y-1, inim_barc, meus_barc, vid_mi, vid_hi, 1);
-			*y--;
+			(*y) -= 1;
+			t = t->esq;
 			if(b[t->tipo - 1].pecasRest != 0){
 				*busca = 1;
-				*atacProa = 1;
+				*passo = 5;
 				return 0;
 			}else{
 				*busca = 0;
 				*alvo = 0;
-				*atacProa = 0;
+				*passo = 0;
 				return 0;
 			}
 		}
