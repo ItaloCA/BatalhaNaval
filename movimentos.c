@@ -156,7 +156,6 @@ int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas, int 
 	BARCO *inim_barc = b;
 	int *vid_hi = hp_inimigo;
 	int *vid_mi = vidas;
-	int i;
 
 
 	if(!(*busca)){
@@ -180,7 +179,8 @@ int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas, int 
 			}
 		}	
 		return 0;
-	}else{ //BUSCA
+	}else{
+		//BUSCA
 		
 		//Indo para a posicao da jogada anterior
 		for (i = 0; i < *y; i++){
@@ -222,7 +222,7 @@ int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas, int 
 						*passo++;
 						return 0;
 					}
-			}else if(*passo == 1){
+			}else if(*passo == 2){
 			//PASSO DOIS
 				atacar(tabu, *x+1, *y-1, inim_barc, meus_barc, vid_mi, vid_hi, 1);
 				*x++;
@@ -234,7 +234,7 @@ int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas, int 
 						return 0;
 					}
 			}
-			else if(*passo == 1){
+			else if(*passo == 3){
 			//PASSO TRES
 				atacar(tabu, *x-1, *y-1, inim_barc, meus_barc, vid_mi, vid_hi, 1);
 				*x--;
@@ -247,7 +247,7 @@ int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas, int 
 					}
 			}
 		}else if(t->celula == '^' || *atacProa == 1){
-			//SE ACHAR UMA PROA CIMA, DIRECAO BAIXO
+			//SE ACHAR UMA PROA PRA CIMA, DIRECAO BAIXO
 			while((t->baixo)->descoberto == -1 && (t->baixo)->celula != 'v'){
 				*x++;
 			}
@@ -264,7 +264,7 @@ int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas, int 
 				return 0;
 			}
 		}else if(t->celula == 'v'){
-			//SE ACHAR UMA PROA BAIXO
+			//SE ACHAR UMA PROA PRA BAIXO, DIRECAO CIMA
 			while((t->cima)->descoberto == -1 && (t->cima)->celula != '^'){
 				*x--;
 			}
@@ -281,7 +281,7 @@ int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas, int 
 				return 0;
 			}
 		}else if(t->celula == '<'){
-			//SE ACHAR UMA PROA ESQUERDA
+			//SE ACHAR UMA PROA PRA ESQUERDA, DIRECAO DIREITA
 			while((t->dir)->descoberto == -1 && (t->dir)->celula != '>'){
 				*y++;
 			}
@@ -298,7 +298,7 @@ int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas, int 
 				return 0;
 			}
 		}else if(t->celula == '>'){
-			//SE ACHAR UMA PROA DIREITA
+			//SE ACHAR UMA PROA PRA DIREITA, DIRECAO ESQUERDA
 			while((t->esq)->descoberto == -1 && (t->esq)->celula != '<'){
 				*y--;
 			}
