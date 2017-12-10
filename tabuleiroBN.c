@@ -1,16 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-/*Documentação
 
+/*
 Valores para descoberto:
 	-1 : * (Destruido mas não por completo)
 	 0 : Não descoberto
 	 1 : Destruido por total
 
 
-Valores para tipo
-	 0 : Agua
+Valores para tipo:
+	 0 : Água
 	 1 : Jangada
 	 2 : Submarino 1
 	 3 : Submarino 2
@@ -20,8 +20,8 @@ Valores para tipo
 	 7 : Destroyer 1
 	 8 : Destroyer 2
 	 9 : Porta aviões
-
 */
+
 typedef struct tabuleiro{
 	struct tabuleiro *cima;
 	struct tabuleiro *esq;
@@ -40,6 +40,23 @@ typedef struct barco{
 }BARCO;
 
 int inserir(TAB *t,BARCO * b , int x , int y, int d, int tipo, int revelar){
+	/*
+	Função:
+		-inserir()
+	Parametros:
+		-TAB *t: Tabuleiro
+		-BARCO * b: Um elemento do vetor de barcos recebido da função poisicionando_barcos() 
+		-x: Coluna
+		-y: Linha
+		-d: Direção para qual o barco deve ser posicionado
+		-tipo: Qual barco será inserido
+		-revelar: Se deve-se ou não revelar o conteúdo inserido
+	Descrição:
+		-Insere em um tabuleiro "t", um barco de um certo "tipo" no ponto "(x,y)" com a struct barco "b"
+		sendo usada para auxiliar na insersao e um int revelar para
+		saber se devemos ou nao revelar as pecas inseridas
+	*/
+
 	int i;
 	TAB *aux;
 	for (i = 0; i < y; i++)
@@ -178,8 +195,22 @@ int inserir(TAB *t,BARCO * b , int x , int y, int d, int tipo, int revelar){
 		return 0;
 	return 0;
 }
-
 void poisicionando_barcos(TAB* t, BARCO b[9], int revelar){
+	/*
+	Função:
+		-poisicionando_barcos()
+	Parametros:
+		-TAB* t: Tabuleiro
+		-BARCO b[9]: Vetor de Barcos
+		-revelar: Variável que decide se deve-se ou nao revelar
+	o conteudo inserido no tabuleiro
+	Descricao:
+		-Recebe um ponteiro para tabuleiro "t", um vetor de Barcos "b"
+		onde esse vetor de Barcos sera preenchido com os devido número
+		de peças que cada barco precisa, e depois irá usar outra função para
+		preencher o tabuleiro com tais barcos. O inteiro revelar é usado
+		para saber se é necessário revelar as peças inseridas.
+	*/
 
 	int barcos = 0,x,y,i,d;
 	while(barcos <= 8){
@@ -207,6 +238,17 @@ void poisicionando_barcos(TAB* t, BARCO b[9], int revelar){
 }
 
 void criar_tabuleiro(TAB** r){
+	/*
+	Função:
+		-criar_tabuleiro()
+	Parametros:
+		-TAB **r: Ponteiro para tabuleiro
+	Descrição:
+		-Recebe um ponteiro para tabuleiro "r",
+		cria um tabuleiro 12x12 com r apontando para
+		sua posicao inicia (0,0).
+	*/
+
 	int i, j;
 	(*r) = (TAB*)malloc(sizeof(TAB));
 	TAB* p = *r , *inicio = (*r);
@@ -215,8 +257,6 @@ void criar_tabuleiro(TAB** r){
 	p->celula = 'O';
 	p->tipo = 0;
 	p->descoberto = 0;
-
-
 
 	for (i = 0; i < 12; i++){
 		p->dir = (TAB*)malloc(sizeof(TAB));
@@ -229,7 +269,6 @@ void criar_tabuleiro(TAB** r){
 	}
 	
 	p->dir = NULL;
-
 	
 	TAB*superior;
 	superior = inicio;
@@ -242,7 +281,6 @@ void criar_tabuleiro(TAB** r){
 		p->tipo = 0;
 		p->descoberto = 0;
 		p->esq = NULL;
-
 
 		for(j=0; j<11; j++){
 
@@ -258,16 +296,12 @@ void criar_tabuleiro(TAB** r){
 				superior = superior->dir;
 				superior->baixo = p;
 				p->cima = superior;		
-
-
 		}
-
 		p->dir = NULL;
 
 		inicio = inicio->baixo;
 		superior = inicio;
 	}
-
 
 	superior->baixo = (TAB*)malloc(sizeof(TAB));
 	p = superior->baixo;
@@ -295,13 +329,20 @@ void criar_tabuleiro(TAB** r){
 		p->baixo = NULL;
 
 	}
-
 	p->dir = NULL;
-
 }
 
-
 void imprimir(TAB* t, TAB* e){
+	/* 
+	Função:
+		-imprimir()
+	Parametros:
+		-TAB* t: Tabuleiro do usuário
+		-TAB* e: Tabuleiro do computador
+	Descrição:
+		-Recebe dois tabuleiros, "t" e "e", que serão impressos na tela.
+	*/
+
 	int i,j;
 	TAB* lh = t, *lc = e;
 	printf("           JOGADOR 1                      COMPUTADOR\n");
@@ -349,9 +390,6 @@ void imprimir(TAB* t, TAB* e){
 		lc = lc->baixo;
 		e = lc;
 		printf("|\n");
-
 	}
 	printf("\n");
-
 }
-
