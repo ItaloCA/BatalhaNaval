@@ -4,6 +4,16 @@
 #include "tabuleiroBN.h"
 #include "movimentos.h"
 
+/*
+EQUIPE: Damn yer eyes! ("Cego sejas tu"; praga rogada muitas vezes pelos piratas. By Wikipedia)
+	  
+	  -Ítalo Cavalcante de Abreu..................397135
+	  -João Vitor Pinheiro Nascimento.............388837
+	  -Adislânia Martins Freires..................384338
+	  -Leonardo Monteiro Medeiros.................388838
+	  
+*/
+
 int main(int argc, char const *argv[]){
 	//Variaveis	
 	TAB *HUM, *COM;			// ponteiros para a primeira posiçao dos dois tabuleiros.
@@ -18,7 +28,9 @@ int main(int argc, char const *argv[]){
 	srand(time(NULL));		//define a seed da funçao rand() como sendo o relogio.
 	criar_tabuleiro(&COM);
 	criar_tabuleiro(&HUM);
-
+	short int *J_acertou;
+	short int C_acertou; 
+	int pontosJ = 0, pontosC = 0;
 
 	//Jogo
 
@@ -29,6 +41,8 @@ int main(int argc, char const *argv[]){
 	int alvo;
 	int passo;
 
+	J_acertou = (short int*)malloc(sizeof(short int));//**********
+
 
 	SA alvoSecundario;
 	
@@ -36,6 +50,8 @@ int main(int argc, char const *argv[]){
 		vidasHUM = 8;
 		vidasCOM = 8;
 		rodada = 0;
+		*J_acertou = 0;
+		C_acertou = 0;
 
 		x = 0;
 		y = 0;
@@ -62,34 +78,45 @@ int main(int argc, char const *argv[]){
 			printf("Digite as coordenadas (x,y) para o ataque: ");
 
 			//laço que repete ate que o jogador entre coordenadas que nao foram atacadas
-			ataque = 2;         // Se entrada = 1, a casa ja foi atacada, se entrada = 0 a casa em (x, y) pode ser atacada
-			while(ataque){	
-				if(ataque == 1)
-					printf("Casa ja foi atacada, escolha outras coordenadas\n");
-				gets(entrada);
-				//Laço que repete ate que o jogador digite coordenadas validas
-				while(traduzir(entrada, &ataque_x, &ataque_y)){
-					printf("Entrada invalida!\n");
-					gets(entrada);   
+			*J_acertou = 0;
+			if(C_acertou == 0){  //***************************************************
+				ataque = 2;         // Se entrada = 1, a casa ja foi atacada, se entrada = 0 a casa em (x, y) pode ser atacada
+				while(ataque){	
+					if(ataque == 1)
+						printf("Casa ja foi atacada, escolha outras coordenadas\n");
+					gets(entrada);
+					//Laço que repete ate que o jogador digite coordenadas validas
+					while(traduzir(entrada, &ataque_x, &ataque_y)){
+						printf("Entrada invalida!\n");
+						gets(entrada);   
+					}
+					//Ataque do jogador
+					ataque = atacar(COM, ataque_x, ataque_y, barcos_COM, barcos_HUM, &vidasHUM, &vidasCOM, 0, J_acertou); //***************
 				}
-				//Ataque do jogador
-				ataque = atacar(COM, ataque_x, ataque_y, barcos_COM, barcos_HUM, &vidasHUM, &vidasCOM, 0);
-			}
+			} //*******************
 
+			C_acertou = 0;
 		    //Vez do Computador
-			atacarComp(HUM, barcos_COM, barcos_HUM, &vidasHUM, &vidasCOM, &x, &y, &busca, &alvo, &passo, &alvoSecundario);
+			if(*J_acertou == 0)
+				atacarComp(HUM, barcos_COM, barcos_HUM, &vidasHUM, &vidasCOM, &x, &y, &busca, &alvo, &passo, &alvoSecundario); //*************
 		
 			ult_ataque_x = ataque_x;
 			ult_ataque_y = ataque_y;
 
 		}
 
+
+
 	//Vencedor e se quer jogar novamente
 		imprimir(HUM, COM);
 		printf("Ultimos Ataques:\n   Jogador: (%d, %c)\n   Bot:     (%d, %c)\n" , ult_ataque_x + 1, (char)ult_ataque_y + 65, x + 1, (char)y+65);
-		if(vidasHUM)
+		if(vidasHUM){
+			pontosJ++;
 			printf("\n---------- VOCÊ VENCEU! ----------\n\n");
-
+		}else{
+			pontosC++;
+			printf("\n---------- VOCE PERDEU  ----------\n\n");
+		}
 		printf("Deseja jogar novamente? (Y/N)\n");
 		scanf("%s" , entrada);
 		jogar = 0;
@@ -103,8 +130,15 @@ int main(int argc, char const *argv[]){
 		limpar_tabuleiro(COM, 0);
 	}
 
+	printf("PONTUACAO FINAL:\nSeus Pontos: %d        Pontos do COM: %d", pontosJ ,pontosC);
+
 	limpar_tabuleiro(COM, 1);
 	limpar_tabuleiro(HUM, 1);
 
 	return 0;
 }
+
+
+
+
+//Deus é top
