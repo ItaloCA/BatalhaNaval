@@ -4,6 +4,12 @@
 #include <string.h>
 #include "tabuleiroBN.h"
 
+typedef struct secondAlvos{
+	int alvo;
+	int x;
+	int y;
+}SA;
+
 void revelar_barco(BARCO embarcacao, int tipo){
 	/*
 	Função:
@@ -180,7 +186,7 @@ int atacar(TAB *t, int x, int y, BARCO *b, BARCO *frota, int* vidas, int* hp_ini
 	return 1;
 }
 
-int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas, int *x, int *y, int *busca, int *alvo, int *passo, int *atacProa){
+int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas, int *x, int *y, int *busca, int *alvo, int *passo, int *atacProa, SA* alvoSec){
 	/*
 	Função:
 		-atacarComp()
@@ -210,7 +216,16 @@ int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas, int 
 	int *vid_hi = hp_inimigo;
 	int *vid_mi = vidas;
 	int i = 1;
+	if(!busca && alvoSec->alvo != 0){
+		*busca = 1;
+		*alvo = alvoSec->alvo - 1;
+		*x = alvoSec->x;
+		*y = alvoSec->y;
 
+		alvoSec->alvo = 0;
+		alvoSec->x = -1;
+		alvoSec->y = -1;
+	}
 
 	if(!(*busca)){
 		//Jogada rand utilizando a função atacar
@@ -256,6 +271,13 @@ int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas, int 
 					atacar(tabu, *x-1, *y, inim_barc, meus_barc, vid_mi, vid_hi, 1);
 					(*x) -= 1;
 					t = t->cima;
+
+					if(t->tipo != 0 && t->tipo - 1 != *alvo){
+						alvoSec->x = *x;
+						alvoSec->y = *y;
+						alvoSec->alvo = t->tipo;
+					}
+
 					if((t->celula == '#' || t->celula == '^') && t->tipo - 1 == *alvo){
 						return 0;
 					}else{

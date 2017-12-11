@@ -16,6 +16,8 @@ int main(int argc, char const *argv[]){
 	char entrada[21];		//cadeia de caracteres que armazena a entrada do teclado.
 	int rodada, ataque;//contador de rodadas; variavel que verifica a validade da entrada.
 	srand(time(NULL));		//define a seed da funçao rand() como sendo o relogio.
+	criar_tabuleiro(&COM);
+	criar_tabuleiro(&HUM);
 
 
 	//Jogo
@@ -26,11 +28,9 @@ int main(int argc, char const *argv[]){
 	int busca;
 	int alvo;
 	int passo;
-	typedef struct secondAlvos{
-		int alvo;
-		int x;
-		int y;
-	}SA;
+
+
+	SA alvoSecundario;
 	
 	while(jogar){
 		vidasHUM = 8;
@@ -42,9 +42,13 @@ int main(int argc, char const *argv[]){
 		busca = 0;
 		alvo = 0;
 		passo = 0;
+	// Zerando lista de alvos
+
+		alvoSecundario.alvo = 0;
+		alvoSecundario.x = -1;
+		alvoSecundario.y = -1; 
+
 	//Iniciar Tabuleiro
-		criar_tabuleiro(&COM);
-		criar_tabuleiro(&HUM);
 		poisicionando_barcos(HUM, barcos_HUM, 1);
 		poisicionando_barcos(COM, barcos_COM, 0);
 
@@ -73,7 +77,7 @@ int main(int argc, char const *argv[]){
 			}
 
 		    //Vez do Computador
-			atacarComp(HUM, barcos_COM, barcos_HUM, &vidasHUM, &vidasCOM, &x, &y, &busca, &alvo, &passo);
+			atacarComp(HUM, barcos_COM, barcos_HUM, &vidasHUM, &vidasCOM, &x, &y, &busca, &alvo, &passo, &alvoSecundario);
 		
 			ult_ataque_x = ataque_x;
 			ult_ataque_y = ataque_y;
@@ -95,8 +99,12 @@ int main(int argc, char const *argv[]){
 				fflush(stdin);
 			}
 		
-
+		limpar_tabuleiro(HUM, 0);
+		limpar_tabuleiro(COM, 0);
 	}
+
+	limpar_tabuleiro(COM, 1);
+	limpar_tabuleiro(HUM, 1);
 
 	return 0;
 }

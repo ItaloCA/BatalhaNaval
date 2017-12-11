@@ -26,3 +26,5 @@ void poisicionando_barcos(TAB*, BARCO [9], int);
 void criar_tabuleiro(TAB**);
 
 void imprimir(TAB*, TAB*);
+
+void limpar_tabuleiro(TAB*, int);

@@ -393,3 +393,31 @@ void imprimir(TAB* t, TAB* e){
 	}
 	printf("\n");
 }
+
+void limpar_tabuleiro(TAB* t, int f){
+	int i;
+	TAB* inicio = t->baixo;
+	TAB* ant = t;
+
+	for (i = 0; i < 144; i++){
+		t->celula = 'O';
+		t->descoberto = 0;
+		t->tipo = 0;
+		
+		if(t->dir != NULL){	
+			if(f)
+				ant = t;
+			t = t->dir;
+		}
+		else{
+			if(f)
+				ant = t;
+			t = inicio;
+			if(inicio->baixo != NULL)
+				inicio = inicio->baixo;
+		}
+
+		free(ant);
+	}
+
+}
