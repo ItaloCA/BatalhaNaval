@@ -216,7 +216,7 @@ int atacarComp(TAB *t, BARCO *frota, BARCO *b, int* hp_inimigo, int* vidas, int 
 	int *vid_hi = hp_inimigo;
 	int *vid_mi = vidas;
 	int i = 1;
-	if(!busca && alvoSec->alvo != 0){
+	if(!busca && alvoSec->alvo != 0 && b[(alvoSec->alvo) - 1].pecasRest > 0){
 		*busca = 1;
 		*alvo = alvoSec->alvo - 1;
 		*x = alvoSec->x;
